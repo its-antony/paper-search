@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paper-search"
+version = "0.2.0"
+description = "Academic paper search service with multi-source support, usable as a library, CLI, or MCP server."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["academic", "papers", "search", "arxiv", "pubmed", "semantic-scholar", "mcp"]
+dependencies = [
+    "pydantic>=2.0",
+    "httpx[socks]>=0.28.1",
+    "requests",
+    "feedparser",
+    "PyPDF2>=3.0.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=4.9.0",
+]
+
+[project.optional-dependencies]
+mcp = ["fastmcp", "mcp[cli]>=1.6.0"]
+dev = ["pytest", "pytest-asyncio"]
+
+[project.scripts]
+paper-search-mcp = "paper_search.transports.mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["paper_search"]
