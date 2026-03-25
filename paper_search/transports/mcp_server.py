@@ -273,6 +273,8 @@ def main():
     if args.transport in ("sse", "streamable-http"):
         mcp.settings.host = args.host
         mcp.settings.port = args.port
+        # Allow LAN access by disabling DNS rebinding protection
+        mcp.settings.transport_security.enable_dns_rebinding_protection = False
 
     mcp.run(transport=args.transport)
 
