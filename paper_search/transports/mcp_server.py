@@ -5,6 +5,8 @@ import asyncio
 from typing import Any, Dict, List, Optional
 
 from mcp.server.fastmcp import FastMCP
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from ..service.search_service import PaperSearchService
 from ..service.download_service import DownloadService
@@ -15,6 +17,11 @@ mcp = FastMCP("paper_search_server")
 search_service = PaperSearchService()
 download_service = DownloadService(registry=search_service.registry)
 export_service = ExportService()
+
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health_check(request: Request) -> JSONResponse:
+    return JSONResponse({"status": "ok"})
 
 
 # ========== Static top-level tools ==========
@@ -294,6 +301,8 @@ def main():
         mcp.settings.port = args.port
         # Allow LAN access by disabling DNS rebinding protection
         mcp.settings.transport_security.enable_dns_rebinding_protection = False
+        # Stateless mode: no session affinity required, works behind LB/CDN
+        mcp.settings.stateless_http = True
 
     mcp.run(transport=args.transport)
 
