@@ -20,7 +20,7 @@
 - **双模式使用** — 既是 Python 库（`from paper_search import PaperSearchService`），也是 MCP Server
 - **Pydantic 数据模型** — 类型安全、序列化友好
 - **多源并发搜索 + 自动去重** — 基于 DOI / 标题+作者 去重
-- **智能下载回退链** — 源原生下载 → OA 仓库 → Unpaywall → Sci-Hub（可选）
+- **Open-access first 下载链** — 源原生下载 → OA 仓库 → Unpaywall；其他来源需要显式 opt-in
 - **引文网络追踪** — Snowball search，支持前向/后向引用递归（1-3 层深度）
 - **多格式导出** — CSV、RIS（Zotero/Mendeley/EndNote）、BibTeX
 
@@ -167,7 +167,7 @@ async def download_and_export():
     dl = DownloadService(registry=reg)
     export = ExportService()
 
-    # 下载论文 PDF（自动回退链）
+    # 下载论文 PDF（默认只走 open-access fallback）
     path = await dl.download(
         source="arxiv",
         paper_id="2106.12345",
@@ -252,6 +252,10 @@ cp .env.example .env
 ```
 
 所有环境变量均使用 `PAPER_SEARCH_MCP_` 前缀，兼容原项目的无前缀写法。
+
+### 下载策略
+
+默认下载流程只使用源站、开放仓库和 Unpaywall 等 open-access 来源。任何非 OA fallback 都需要调用方显式开启，并由使用者自行确认合规性。
 
 ---
 

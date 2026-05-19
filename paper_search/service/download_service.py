@@ -23,7 +23,7 @@ class DownloadService:
       1. Source-native ``download_pdf`` via the connector registry.
       2. OA repository search (openaire -> core -> europepmc -> pmc).
       3. Unpaywall DOI resolution.
-      4. Sci-Hub (optional, last resort).
+      4. Sci-Hub (explicit opt-in, last resort).
     """
 
     REPOSITORY_FALLBACK_SOURCES = ("openaire", "core", "europepmc", "pmc")
@@ -43,7 +43,7 @@ class DownloadService:
         doi: str = "",
         title: str = "",
         save_path: str = "./downloads",
-        use_scihub: bool = True,
+        use_scihub: bool = False,
         scihub_base_url: str = "https://sci-hub.se",
     ) -> str:
         """Try source-native download, OA repositories, Unpaywall, then optional Sci-Hub.
@@ -55,6 +55,7 @@ class DownloadService:
             title: Optional title used for repository/Sci-Hub fallback when DOI is unavailable.
             save_path: Directory to save downloaded files.
             use_scihub: Whether to fallback to Sci-Hub after OA attempts fail.
+                Defaults to False so the public package remains open-access first.
             scihub_base_url: Sci-Hub mirror URL for fallback.
 
         Returns:

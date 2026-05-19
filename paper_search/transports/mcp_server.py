@@ -47,7 +47,7 @@ async def download_with_fallback(
     doi: str = "",
     title: str = "",
     save_path: str = "./downloads",
-    use_scihub: bool = True,
+    use_scihub: bool = False,
     scihub_base_url: str = "https://sci-hub.se",
 ) -> str:
     """Try source-native download, OA repositories, Unpaywall, then optional Sci-Hub."""
